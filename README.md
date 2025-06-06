@@ -1,2 +1,2 @@
 # Lucre
-python script
+卷王峡谷(赚钱版）
