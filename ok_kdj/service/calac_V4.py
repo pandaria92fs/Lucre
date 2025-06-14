@@ -343,7 +343,7 @@ def main():
     # 创建计算器
     calculator = DirectKDJCalculator()
     # 测试文件
-    sample_file = "kline_data/btc_USDT_SWAP_kline.csv"
+    sample_file = "/ok_kdj/service/kdj_folder/BTCUSDT/BTCUSDT_24rows_20250614_10_beijing_kdj.csv"
 
     import os
     if os.path.exists(sample_file):
