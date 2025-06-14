@@ -1,11 +1,11 @@
 bash# 启动定时调度器
-python kdj_scheduler.py
+python -m ok_kdj.service.kdj_scheduler
 
 # 使用简单调度器
-python kdj_scheduler.py --simple
+python -m ok_kdj.service.kdj_scheduler--simple
 
 # 立即执行一次任务
-python kdj_scheduler.py --run-once
+python -m ok_kdj.service.kdj_scheduler --run-once
 
 # 查看调度器状态
-python kdj_scheduler.py --status
+python -m ok_kdj.service.kdj_scheduler --status

@@ -6,7 +6,8 @@ import threading
 from datetime import datetime, timedelta
 import signal
 import sys
-
+from ok_kdj.proxy import okproxy
+from ok_kdj.service.kdj_excutor  import *  # 根据实际文件名调整
 
 def setup_logger(name="KDJ_Scheduler", log_level=logging.INFO):
     """
@@ -121,7 +122,6 @@ class KDJScheduler:
         kline_start_time = time.time()
 
         try:
-            import okproxy  # 根据你的实际导入路径调整
             fetcher = okproxy.OKXKlineFetcher()
 
             # 使用异步并发模式，每秒5个请求
@@ -165,13 +165,13 @@ class KDJScheduler:
         processing_start_time = time.time()
 
         try:
-            # 指定数据目录 (根据你的实际项目结构调整)
-            project_root = os.path.dirname(os.path.dirname(__file__))  # 根据实际情况调整
-            data_directory = os.path.join(project_root, 'service', 'kline_data_folder')
+            # 指定数据目录
+            project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            data_directory = os.path.join(project_root, 'ok_kdj','service', 'kline_data_folder')
             task_logger.debug(f"数据目录: {data_directory}")
 
-            # 这里需要根据你的实际函数名调整
-            # process_all_latest_files(data_directory)
+            # 导入KDJ处理函数
+            process_all_latest_files(data_directory)
 
             processing_end_time = time.time()
             processing_duration = processing_end_time - processing_start_time
@@ -191,16 +191,32 @@ class KDJScheduler:
 
         try:
             task_logger.info("📂 查找最新 _direct_kdj.csv 文件...")
-            # latest_direct_kdj_files = find_latest_direct_kdj_csv_files(data_directory)
-            # task_logger.info(f"找到 {len(latest_direct_kdj_files)} 个KDJ文件")
 
-            # bot = KDJPushBot()
+            # 导入推送相关函数
+            latest_direct_kdj_files = find_latest_direct_kdj_csv_files(data_directory)
+            task_logger.info(f"找到 {len(latest_direct_kdj_files)} 个KDJ文件")
+
+            bot = KDJPushBot()
 
             processed_files = 0
             failed_files = 0
 
-            # for symbol, path in latest_direct_kdj_files.items():
-            #     ... 处理逻辑
+            for symbol, path in latest_direct_kdj_files.items():
+                task_logger.debug(f"📄 处理文件: {path}")
+                file_start_time = time.time()
+
+                try:
+                    bot.process_file(path)
+                    file_end_time = time.time()
+                    file_duration = file_end_time - file_start_time
+                    processed_files += 1
+                    task_logger.info(f"✅ {symbol} 处理完成 (用时: {format_duration(file_duration)})")
+
+                except Exception as e:
+                    file_end_time = time.time()
+                    file_duration = file_end_time - file_start_time
+                    failed_files += 1
+                    task_logger.error(f"❌ {symbol} 处理失败: {str(e)} (用时: {format_duration(file_duration)})")
 
             push_end_time = time.time()
             push_duration = push_end_time - push_start_time
