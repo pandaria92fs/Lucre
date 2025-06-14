@@ -230,7 +230,7 @@ def main():
     print("=" * 50)
 
     # 使用默认路径 script/sqqq/swap.csv
-    results = fetcher.fetch_all_klines(bar="1H", limit=9, delay=0.1)
+    results = fetcher.fetch_all_klines(bar="1H", limit=30, delay=0.1)
 
     if results:
         # 保存到默认路径 script/sqqq/kline_data/
@@ -257,7 +257,7 @@ def run_kline_fetcher():
 
     # 默认会读取 ../script/sqqq/swap.csv
     # 保存到 ../script/sqqq/kline_data/
-    results = fetcher.fetch_all_klines(bar="1H", limit=9, delay=0.1)
+    results = fetcher.fetch_all_klines(bar="1H", limit=30, delay=0.1)
 
     if results:
         fetcher.save_klines_to_csv(results)
